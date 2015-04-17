@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="font_manager_btn_use">一键替换</string>
+    <string name="font_manager_title">字体替换</string>
+    <string name="font_manager_download_success">【%s】下载成功</string>
+    <string name="font_manager_download_fail">【%s】下载失败！！！</string>
+    <string name="font_manager_download_start">【%s】开始下载，请稍候...</string>
+    <string name="font_manager_not_install">你没有安装字体管家。请安装字体管家后，再使用该字体</string>
+    <string name="font_manager_too_old">你的字体管家版本太旧啦，快升级吧！</string>
+    <string name="font_manager_dialog_title">温馨提示</string>
+    <string name="font_manager_dialog_message">请在“字体管家”里使用该字体，是否要安装？</string>
+    <string name="font_manager_dialog_ok">现在使用</string>
+    <string name="font_manager_dialog_cancel">暂不使用</string>
+    
+    <string name="font_manager_apk_download_start">替换中...</string>
+    <string name="font_manager_apk_download_success">字体管家下载成功</string>
+    <string name="font_manager_apk_download_failed">字体管家下载失败</string>
+    <string name="font_manager_apk_use">安装</string>
+    
+    <string name="font_manager_loading">正在载入...</string>
+    
+</resources>

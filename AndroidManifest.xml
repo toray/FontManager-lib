@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.toraysoft.zitimanager_lib"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="21" />
+
+    <application>
+        <activity android:name=".FontManagerListActivity" >
+        </activity>
+
+        <receiver android:name="com.xinmei365.fontsdk.receiver.ChangeFontBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="com.xinmei365.fontsdk.change" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>
