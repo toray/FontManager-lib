@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.toraysoft.zitimanager_lib.adapter.FontManagerAdapter;
 import com.xinmei365.fontsdk.FontCenter;
@@ -58,7 +59,7 @@ public class FontManagerListActivity extends ActionBarActivity {
 		progressDialog = ProgressDialog.show(this, "",
 				getString(R.string.font_manager_loading), false, false);
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-
+		//getCateListFromServer
 		FontCenter.getInstance().getCateListFromServer(new IHttpCallBack() {
 
 			@SuppressWarnings("unchecked")
@@ -66,7 +67,15 @@ public class FontManagerListActivity extends ActionBarActivity {
 			public void onSuccess(Object obj) {
 
 				List<Category> cat = (List<Category>) obj;
-
+				if(cat==null){
+					Log.e("err", "null");
+					if (progressDialog != null) {
+						Toast.makeText(FontManagerListActivity.this, "字体数据为空", Toast.LENGTH_LONG).show();
+						progressDialog.hide();
+					}
+					
+					return ;
+				}
 				if (cat.size() > 0) {
 					FontCenter.getInstance().getCateFontListFromServer(
 							new IHttpCallBack() {
@@ -101,12 +110,12 @@ public class FontManagerListActivity extends ActionBarActivity {
 				}
 				Log.i("FontManager", "getCateListFromServer onErr");
 			}
-		});
+		},"cn");
 	}
 
 	@Override
 	protected void onDestroy() {
-		FontCenter.getInstance().recovery();
+//		FontCenter.getInstance().recovery();//recovery
 		super.onDestroy();
 	}
 

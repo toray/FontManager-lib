@@ -3,7 +3,7 @@ package com.toraysoft.zitimanager_lib.adapter;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -334,11 +334,13 @@ public class FontManagerAdapter extends BaseAdapter {
 		}
 	}
 
+	@SuppressLint("NewApi")
 	void showTip(int msg) {
 		if (mContext != null && mContext.isDestroyed())
 			Toast.makeText(mContext, msg, Toast.LENGTH_LONG).show();
 	}
 
+	@SuppressLint("NewApi")
 	void showTip(String msg) {
 		if (mContext != null && mContext.isDestroyed())
 			Toast.makeText(mContext, msg, Toast.LENGTH_LONG).show();
