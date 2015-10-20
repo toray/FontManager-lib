@@ -78,7 +78,6 @@ public class FontListView extends ListView implements OnScrollListener{
 
 		File f = new File(fd.getThumbnailLocalPath());
 		if (f.exists()) { // 字体已下载，直接读取typeface
-
 			try {
 				Typeface face = Typeface.createFromFile(new File(fd.getThumbnailLocalPath()));
 				tvName.setTypeface(face);
