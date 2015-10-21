@@ -6,6 +6,9 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +18,7 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +30,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.changefontmanager.sdk.ChangeFontManager;
+import com.changefontmanager.sdk.IChangeFont;
 import com.toraysoft.utils.download.DLListener;
 import com.toraysoft.utils.download.DLManager;
 import com.toraysoft.zitimanager_lib.FontListView;
@@ -43,12 +49,13 @@ public class FontManagerAdapter extends BaseAdapter {
 
 	FontManagerListActivity mContext;
 	List<Font> data;
-
+	IChangeFont chan;
 	List<Font> downloadingFont = new ArrayList<Font>();
 
 	public FontManagerAdapter(FontManagerListActivity context, List<Font> items) {
 		this.mContext = context;
 		this.data = items;
+		chan = ChangeFontManager.getInstance().getChangefont(context);
 	}
 
 	@Override
@@ -149,7 +156,7 @@ public class FontManagerAdapter extends BaseAdapter {
 												Toast.LENGTH_SHORT).show();
 										Log.i(TAG, "Font " + font.getFontName() + " download OK "
 												+ font.getFontLocalPath());
-										invokeType(font.getZhLocalPath());
+										invokeType(font);
 										downloadingFont.remove(font);
 									}
 
@@ -286,7 +293,7 @@ public class FontManagerAdapter extends BaseAdapter {
 						}
 
 					} else {
-						invokeType(font.getZhLocalPath());
+						invokeType(font);
 					}
 				}
 			}
@@ -350,26 +357,112 @@ public class FontManagerAdapter extends BaseAdapter {
 		}
 	}
 
-	private void invokeType(String path) {
-		if (path != null) {
-			File f = new File(path);
-			Log.e("tag", "path:" + path);
-			if (f.exists()) {
-				Typeface type = Typeface.createFromFile(path);
-				TextView tv = new TextView(mContext);
-				tv.setTypeface(type);
-				Paint paint = new Paint();
-				paint.setTypeface(type);
-				Toast.makeText(mContext, "字体下载成功，即将跳转到字体管家替换字体…", Toast.LENGTH_LONG).show();
-				// Intent intent = new Intent(Intent.ACTION_MAIN);
-				// intent.addCategory(Intent.CATEGORY_LAUNCHER);
-				// ComponentName cn = new ComponentName("com.xinmei365.font",
-				// "SplashActivity");
-				// intent.setComponent(cn);
-				// mContext.startActivity(intent);
-				doStartApplicationWithPackageName("com.xinmei365.font");
+	private void invokeType(final Font font) {
+		// if (path != null) {
+		// File f = new File(path);
+		// Log.e("tag", "path:" + path);
+		// if (f.exists()) {
+		// Typeface type = Typeface.createFromFile(path);
+		// TextView tv = new TextView(mContext);
+		// tv.setTypeface(type);
+		// Paint paint = new Paint();
+		// paint.setTypeface(type);
+		// Toast.makeText(mContext, "字体下载成功，即将跳转到字体管家替换字体…",
+		// Toast.LENGTH_LONG).show();
+		// doStartApplicationWithPackageName("com.xinmei365.font");
+		// }
+		AlertDialog.Builder builder = new Builder(mContext);
+		builder.setTitle("温馨提示");
+		builder.setMessage("是否替换字体，替换后某部分机型会重启手机~");
+		builder.setPositiveButton("确定", new Dialog.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				final ProgressDialog proDialog = new ProgressDialog(mContext);
+				proDialog.setTitle("正在更换字体。。。稍后可能自动重启手机");
+				proDialog.show();
+				new AsyncTask<Void, Void, Integer>() {
+
+					@Override
+					protected void onPostExecute(Integer result) {
+						proDialog.dismiss();
+						String message = "";
+						Log.e("tag", "msg = " + result);
+						switch (result) {
+						case 1:
+							message = "中英文全部替换成功";
+							break;
+						case 2:
+							message = "没有权限";
+							break;
+						case 3:
+							message = "中文替换成功";
+							break;
+						case 4:
+							message = "英文替换成功";
+							break;
+						case -1:
+							message = "替换失败";
+							break;
+						case -2:
+							message = "内存不足";
+							break;
+						}
+						if (result == 1 || result == 3 || result == 4) {
+							Toast.makeText(mContext, "换字体状态: " + message, Toast.LENGTH_SHORT).show();
+							chan.changeSuccessed(mContext);
+							
+//							AlertDialog.Builder builder = new Builder(mContext);
+//							builder.setTitle("温馨提示");
+//							builder.setMessage("字体替换成功，有部分手机或许需要手动重启手机才能看到效果哦~~");
+//							builder.setPositiveButton("确定", null);
+							
+							
+							// AlertDialog.Builder builder = new
+							// Builder(context);
+							// builder.setMessage("换字体状态: " + message);
+							// builder.setTitle("是否重启手机？");
+							// builder.setPositiveButton("立即重启", new
+							// OnClickListener() {
+							//
+							// @Override
+							// public void onClick(DialogInterface dialog, int
+							// which) {
+							// dialog.dismiss();
+							// chan.changeSuccessed(context);
+							// }
+							// });
+							// builder.setNegativeButton("稍后重启", new
+							// OnClickListener() {
+							//
+							// @Override
+							// public void onClick(DialogInterface dialog, int
+							// which) {
+							// dialog.dismiss();
+							// }
+							// });
+							// builder.create().show();
+						} else {
+							if (result == 2){
+								Toast.makeText(mContext, "需要root才能更换字体" + message, Toast.LENGTH_SHORT).show();
+							}else {
+								Toast.makeText(mContext, "换字体状态: " + message, Toast.LENGTH_SHORT).show();
+							}
+						}
+					}
+
+					@Override
+					protected Integer doInBackground(Void... params) {
+						int a = chan.changeFont(mContext, font);
+						return a;
+					}
+				}.execute();
 			}
-		}
+		});
+		builder.setCancelable(true);
+		builder.show();
+
+	
 	}
 
 	@SuppressLint("NewApi")

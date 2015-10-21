@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.toraysoft.zitimanager_lib.adapter.FontManagerAdapter;
@@ -31,7 +32,6 @@ public class FontManagerListActivity extends FragmentActivity {
 	private List<Font> data;
 
 	public String downloadUrl;
-
 	ProgressDialog progressDialog;
 
 	@Override
